@@ -25,14 +25,18 @@ public class HellobootApplication {
 	public static void main(String[] args) {
 		TomcatServletWebServerFactory serverFactory = new TomcatServletWebServerFactory(8081);
 		// onStartup
-		WebServer webServer = serverFactory.getWebServer(servletContext -> {
+		WebServer webServer = serverFactory
+				.getWebServer(servletContext -> {
+			/*servlet container 구성 시작 ~ */
+
 
 			// application context -> Spring container
 			GenericApplicationContext applicationContext = new GenericApplicationContext();
 
 			// object를 직접 만들어서 넣어줬던 servlet context와 다르게 이것도 가능하지만!
-			// 스프링은 일반적으로 어떤 클래스로 bean 객체를 만들건지 설정 정보를 등록해줌
+			// 스프링은 일반적으로 어떤 클래스로 bean 객체를 만들건지 클래스 정보를 등록해줌 (설정 정보 등록)
 			applicationContext.registerBean(HelloController.class);
+			applicationContext.registerBean(SimpleHelloService.class);
 
 			// 자기한테 등록된 설정정보를 반영해 spring container 구성 (빈 객체 생성)
 			applicationContext.refresh();

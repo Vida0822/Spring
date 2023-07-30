@@ -1,6 +1,9 @@
 package tobyString.helloboot;
 
-public class SimpleHelloService {
+public class SimpleHelloService implements HelloService {
 
-    String 
+    @Override
+    public String sayHello(String name){
+        return "Hello"+name;
+    } // sayHello
 }
