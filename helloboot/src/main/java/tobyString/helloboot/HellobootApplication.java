@@ -11,6 +11,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.context.support.GenericWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -31,7 +33,7 @@ public class HellobootApplication {
 
 
 			// application context -> Spring container
-			GenericApplicationContext applicationContext = new GenericApplicationContext();
+			GenericWebApplicationContext applicationContext = new GenericWebApplicationContext();
 
 			// object를 직접 만들어서 넣어줬던 servlet context와 다르게 이것도 가능하지만!
 			// 스프링은 일반적으로 어떤 클래스로 bean 객체를 만들건지 클래스 정보를 등록해줌 (설정 정보 등록)
@@ -40,12 +42,12 @@ public class HellobootApplication {
 
 			// 자기한테 등록된 설정정보를 반영해 spring container 구성 (빈 객체 생성)
 			applicationContext.refresh();
-
+			/*
 			servletContext.addServlet("frontController"
 					, new HttpServlet() {
 				@Override
 				protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-					/* 공통기능 코딩~ : 인증, 보안, 다국어처리 .. */
+					// 공통기능 코딩~ : 인증, 보안, 다국어처리 ..
 
 					if (req.getRequestURI().equals("/hello")&&req.getMethod().equals(HttpMethod.GET.name())) {
 
@@ -62,9 +64,16 @@ public class HellobootApplication {
 						resp.setStatus(HttpStatus.NOT_FOUND.value()); // 404
 					}
 
-				}
-			}).addMapping("/*"); // 이때부터 frontController 역할을 맡게 됨
-		}) ;
+				} // service
+			}).addMapping("/*");  // addServlet
+			// 이때부터 frontController 역할을 맡게 됨
+			*/
+					servletContext.addServlet("dispatcherServlet"
+							, new DispatcherServlet(applicationContext) {
+
+							}).addMapping("/*");  // addServlet
+					// 이때부터 frontController 역할을 맡게 됨
+		}) ; // getWebServer
 
 		webServer.start();
 	} // main
