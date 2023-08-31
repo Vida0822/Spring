@@ -1,6 +1,5 @@
-package tobyString.helloboot;
+package tobyspring.helloboot;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 // @Component

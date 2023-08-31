@@ -1,15 +1,7 @@
-package tobyString.helloboot;
+package tobyspring.helloboot;
 
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Objects;
 
 // @RequestMapping("/hello") // 이 안에 매핑 정보가 담겨져있는 메서드가 있다 (/hello 요청을 처리하는 메서드가 있다)
 // @MyComponent
@@ -31,6 +23,9 @@ public class HelloController { // implements ApplicationContextAware {
     }
 */
     //이거 있는채로 실행하면 Bean 생성 오류 => 왜?
+   //  @Autowired
+    // 이거 생략해도 ㄱㅊ ! 클래스의 생성자가 하나라면 + 해당 인터페이스 타입 클래스가 하나라면
+    // 클래스의 생성자와 일치하는 클래스 타입을 찾아 자동으로 주입
     public HelloController(HelloService helloService) {  // 주입
     this.helloService = helloService;
     }
@@ -42,14 +37,11 @@ public class HelloController { // implements ApplicationContextAware {
         System.out.println(applicationContext);
     }
 */
-  //  @GetMapping("/hello")
     @GetMapping("/hello")
    // @ResponseBody
     // 이거 추가해줘야함 : return 된 String 값을 그대로 응답의 Body에 추가해주는 애노테이션 => @RestController 로 대체
     public String hello(String name){
-
         if(name == null || name.trim().length() == 0)throw new IllegalArgumentException();
-
         return helloService.sayHello(name); // 이렇게만 하면 에러! Controller에서 반환하는 String return 값을 스프링은 기본적으로 view 페이지 이름으로 인식
         // null 이면 예외를 던지고 아니면 값을 그대로 넘김 (null이 아닌경우에만 사용되도록)
     } // hello

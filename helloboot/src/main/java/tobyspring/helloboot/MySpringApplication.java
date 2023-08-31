@@ -1,4 +1,4 @@
-package tobyString.helloboot;
+package tobyspring.helloboot;
 
 import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
@@ -14,6 +14,7 @@ public class MySpringApplication {
                 super.onRefresh();
                 ServletWebServerFactory serverFactory = this.getBean(ServletWebServerFactory.class) ;
                 DispatcherServlet dispatcherServlet = this.getBean(DispatcherServlet.class) ;
+//                dispatcherServlet.setApplicationContext(this); => spring container 가 dispatcherServlet은 applicationContext가 필요하니까 알아서 해준것
 
                 WebServer webServer = serverFactory
                         .getWebServer(servletContext -> {
