@@ -16,7 +16,12 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+/*	implementation('org.springframework.boot:spring-boot-starter-web'){ // embeded 된 tomcat은 이 방식으로 제거해야함
+		exclude group: 'org.springframework.boot', module:'spring-boot-starter-tomcat'
+	}
+*/	// implementation 'org.springframework.boot:spring-boot-starter-jetty' // jetty는 그냥 주석으로 지우면 됨
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
