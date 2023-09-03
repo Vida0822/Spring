@@ -20,7 +20,7 @@ public class HelloAPITest {
         // ResponseEntity : 웹 응답의 모든 요소를 담고 있는 객체 => String : Body 부분이 String임(->Json, Dto..)
         // => 따로 cast 안해줘도 String 으로 돌려줌
         ResponseEntity<String> res
-                = rest.getForEntity("http://localhost:8081/hello?name={name}", String.class, "Spring") ;
+                = rest.getForEntity("http://localhost:8081/app/hello?name={name}", String.class, "Spring") ;
 
 
 
@@ -39,7 +39,7 @@ public class HelloAPITest {
         TestRestTemplate rest = new TestRestTemplate();
 
         ResponseEntity<String> res
-                = rest.getForEntity("http://localhost:8081/hello?name=",String.class) ;
+                = rest.getForEntity("http://localhost:8081/app/hello?name=",String.class) ;
 
         Assertions.assertThat(res.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR) ; // 500
 

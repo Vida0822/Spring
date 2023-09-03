@@ -19,4 +19,6 @@ public class HelloDecorator implements HelloService{
     public String sayHello(String name) {
         return "*"+helloService.sayHello(name)+"*" ; // 꾸며주는 기능 추가
     }
+
+
 }

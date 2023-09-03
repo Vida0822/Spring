@@ -16,11 +16,15 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 /*	implementation('org.springframework.boot:spring-boot-starter-web'){ // embeded 된 tomcat은 이 방식으로 제거해야함
 		exclude group: 'org.springframework.boot', module:'spring-boot-starter-tomcat'
 	}
 */	// implementation 'org.springframework.boot:spring-boot-starter-jetty' // jetty는 그냥 주석으로 지우면 됨
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc:2.7.13'
+	runtimeOnly('com.h2database:h2:2.1.214')
+	implementation 'hikari-cp:hikari-cp:3.0.1'
+
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

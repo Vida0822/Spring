@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE,ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE,ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Conditional(MyOnClassCondition.class)
 public @interface ConditionalMyOnClass {
     String value();

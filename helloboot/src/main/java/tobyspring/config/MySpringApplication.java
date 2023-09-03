@@ -1,4 +1,4 @@
-package tobyspring.helloboot;
+package tobyspring.config;
 
 import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;

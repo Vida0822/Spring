@@ -45,4 +45,9 @@ public class HelloController { // implements ApplicationContextAware {
         return helloService.sayHello(name); // 이렇게만 하면 에러! Controller에서 반환하는 String return 값을 스프링은 기본적으로 view 페이지 이름으로 인식
         // null 이면 예외를 던지고 아니면 값을 그대로 넘김 (null이 아닌경우에만 사용되도록)
     } // hello
+
+    @GetMapping("/count")
+    public String count(String name){
+        return name + ":" + helloService.countOf(name) ;
+    }
 }
