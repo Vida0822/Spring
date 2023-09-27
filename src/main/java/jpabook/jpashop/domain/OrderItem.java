@@ -1,5 +1,6 @@
-package domain;
+package jpabook.jpashop.domain;
 
+import jpabook.jpashop.domain.item.Item;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,17 +8,17 @@ import javax.persistence.*;
 
 @Entity
 @Getter @Setter
-public class OrderItems {
+public class OrderItem {
 
     @Id @GeneratedValue
-    @Column(name = "order_id")
+    @Column(name = "order_item_id")
     private Long id ;
 
-    @ManyToOne
-    @JoinColumn("item_id")
+    @ManyToOne(fetch = FetchType.LAZY )
+    @JoinColumn(name = "item_id")
     private Item item ; // many가 OrderItems , one이 Item
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id") // 조인할 컬럼 !
     private Order order ;
 

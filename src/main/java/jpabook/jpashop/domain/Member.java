@@ -1,14 +1,21 @@
-package domain;
+package jpabook.jpashop.domain;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter @Setter
 public class Member {
+    // 이 클래스에 작성된 정보를 바탕으로 테이블이 만들어짐 --> 클래스간 구조를 잘 맞춰줘 연견된 db 테이블들을 잘 생성하도록 'java로 코드' !
 
-    @Id @GeneratedValue
-    @Column(name = "member_id")
+
+    @Id  // 이 필드는 만들어지면 기본키로 사용되며
+    @GeneratedValue // 그 값은 자동으로 생성된다
+    @Column(name = "member_id") // 이렇게 생성(매핑)되는 칼럼은 "member_id"를 이름으로 갖는다
     // column 이름 줘야함 for mapping ! 아님 진짜 'id'라는 컬럼명으로 매핑 조회? (아마 )
     private Long id ;
 
@@ -36,5 +43,10 @@ public class Member {
     ==> Member(주인 x) : "난 거울이에요"    @OneToMany(mappedBy = "member") : order 테이블에 있는 변경된 member_id값이 반영됨
      */
 
+    /* 생성자 초기화 하면 안돼? ㄴㄴ 컬렉션은 필드에서 초기화 하는 것이 안전
+    public Member(List<Order> orders) {
+        this.orders = orders;
+    }
+    */
 
 } // Member

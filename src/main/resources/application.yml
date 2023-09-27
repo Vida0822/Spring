@@ -9,7 +9,7 @@ spring:
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create # Create the schema and destroy previous data.
     properties:
       hibernate:
         show_sql: true

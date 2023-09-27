@@ -1,9 +1,12 @@
-package domain;
+package jpabook.jpashop.domain.item;
 
+import jpabook.jpashop.domain.Category;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // 한 테이블 다 때려박음 (vs strategy : Joined, tablePerClass )
@@ -20,4 +23,10 @@ public abstract class Item {
     private int price ;
     private int stockQuantity ;
 
-}
+    @ManyToMany(mappedBy = "items")
+    // items라는 필드에 의해 만들어진 fk 의 변화가 여기에 반영됨
+    private List<Category> categories = new ArrayList<>() ;
+
+
+
+} // class
