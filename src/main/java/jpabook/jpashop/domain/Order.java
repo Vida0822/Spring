@@ -1,6 +1,8 @@
 package jpabook.jpashop.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.aspectj.weaver.ast.Or;
 
@@ -12,6 +14,7 @@ import java.util.List;
 @Entity
 @Table(name="orders")
 @Getter @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
 
     @Id @GeneratedValue
@@ -75,6 +78,53 @@ public class Order {
         delivery.setOrder(this);
     }
 
+    // 트랜잭션 스크립트 패턴 , 도메인 모델 패턴 (더 많은걸 entity에 위임 ex) 비즈니스 메서드 넣기)
+    // **  생성 메서드 **//
+    /*
+    특정 객체를 생성하는 메서드는 그 생성하는 객체(엔티티, Order.class) 안에 넣어주는게 나음 (다른 서비스나 dao에서 찾는것보다 ! )
+    => 밖에서 Order를 생성해 setsetset 방식이 아니라 애초에 이 Order을 생성할때부터 이 메서드를 호출하게 만듬으로써
+    Member, Delevery, OrderItem이 초기 생성단계부터 입력되도록 함 (생성 메서드에서 )
+    --> 주문 생성에 대한 여러 비즈니스 로직을 여기서 통일
+     */
+    public static Order createOrder(Member member, Delivery delivery, OrderItem...orderItems){
+        Order order = new Order();
+        order.setMember(member);
+        order.setDelivery(delivery);
 
+        for (OrderItem orderItem : orderItems){
+            order.addOrderItem(orderItem);
+        }
+        order.setStatus(OrderStatus.ORDER);
+        order.setOrderDate(LocalDateTime.now());
+        return order ;
+    } // createOrder
 
+    // ** 비즈니스 로직 **//
+    /*
+    주문 취소
+     */
+    public void cancel(){
+        if(delivery.getStatus() == DeleveryStatus.COMP){
+            throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다") ;
+        } // 비즈니스 체크 로직이 엔티티 안에 있음
+        this.setStatus(OrderStatus.CANCEL);
+        for(OrderItem orderItem : orderItems){
+            // 주문된 아이템들도 각각 cancel 해줘야함
+            orderItem.cancel() ;
+        }
+    } // cancel
+
+    // == 조회 로직 == //
+    /*
+    전체 주문 가격 조회
+     */
+    public int getTotalPrice(){
+        int totalPrice = orderItems.stream()
+                .mapToInt(OrderItem::getTotalPrice)
+                .sum();
+        // 왜 굳이 OrderItem의 TotalPrice?
+        // 가격 x 수량 해야함 --> 둘다 OrderItem 클래스에 !
+        // 둘다 OrderItem에 있으니 굳이 각각 get하지 말고 OrderItem 클래스의 메서드로 처리해서 결과값만 가져나옴
+        return totalPrice ;
+    } // getTotalPrice
 } // class
