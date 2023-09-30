@@ -27,7 +27,7 @@ public class OrderRepository {
         return en.find(Order.class, id) ;
     }
 
-     public List<Order> findAll(OrderSearch orderSearch){
+     public List<Order> findAllByString(OrderSearch orderSearch){
         // jpql
         /* return en.createQuery("select o from Order o join o.member m"+
                     " where o.status = :status " +
@@ -50,42 +50,44 @@ public class OrderRepository {
          /*
             문자로 더하기해서 끼워넣기... -> 개 힘듬 개오바 (실수(오타) 多, 가독성 ↓)
           */
-         String jpql = " select o from Order o join o.member m " ;
-         boolean isFirstCondition = true ; // 두번째 조건부턴 and가 되어야해 만듬
 
-         // 주문상태검색
-         if(orderSearch.getOrderStatus() != null){
-             if(isFirstCondition){
-                 jpql += " where " ;
-                 isFirstCondition = false ;
-             }else{
-               jpql += " and ";
+             String jpql = "select o from Order o join o.member m";
+             boolean isFirstCondition = true;
+
+             //주문 상태 검색
+             if (orderSearch.getOrderStatus() != null) {
+                 if (isFirstCondition) {
+                     jpql += " where";
+                     isFirstCondition = false;
+                 } else {
+                     jpql += " and";
+                 }
+                 jpql += " o.status = :status";
              }
-             jpql += " o.status = :status " ;
-         }
 
-         if(StringUtils.hasText(orderSearch.getMemberName())){
-             // hasText() : 이 메서드로 들어오는 인자값(String)이 null이 아니면 true를 반환 , null이 들어오면 (아무 조건도 입력되지 않으면 false)
-             if (isFirstCondition){
-                 jpql += " where ";
-                 isFirstCondition = false ;
-             }else{
-                 jpql += " and ";
+             //회원 이름 검색
+             if (StringUtils.hasText(orderSearch.getMemberName())) {
+                 if (isFirstCondition) {
+                     jpql += " where";
+                     isFirstCondition = false;
+                 } else {
+                     jpql += " and";
+                 }
+                 jpql += " m.name like :name";
              }
-             jpql += " m.name like :name " ;
-         }
-         TypedQuery<Order> query = en.createQuery(jpql, Order.class).setMaxResults(1000) ;
-         // TypedQuery : Execute a SELECT query and return the query results as a typed List.
-         //Returns: a list of the results<Order>
-         if (orderSearch.getOrderStatus() != null){
-             query = query.setParameter("status", orderSearch.getOrderStatus()) ;
-         }
-         if (StringUtils.hasText(orderSearch.getMemberName()) ){
-             query = query.setParameter("name", orderSearch.getMemberName()) ;
-         }
-         return query.getResultList() ;
 
-    } // findAll
+             TypedQuery<Order> query = en.createQuery(jpql, Order.class)
+                     .setMaxResults(1000);
+
+             if (orderSearch.getOrderStatus() != null) {
+                 query = query.setParameter("status", orderSearch.getOrderStatus());
+             }
+             if (StringUtils.hasText(orderSearch.getMemberName())) {
+                 query = query.setParameter("name", orderSearch.getMemberName());
+             }
+
+             return query.getResultList();
+         }
 
     // 동적쿼리 2. Jpa Criteria (권장 x)
     /*
