@@ -31,7 +31,6 @@ public class ItemController {
     public String createBook(BookForm form){
         Book book = new Book();
 
-        // 이렇게 setset하는건 좋지 않은 설계 !  --> create method (생성 메서드)로 비즈니스 로직 넘겨서 setter 없애주는게 좋은 설계
         book.setName(form.getName());
         book.setPrice(form.getPrice());
         book.setStockQuantity(form.getStockQuantity());
@@ -68,8 +67,8 @@ public class ItemController {
     } // updateItemForm
 
     @PostMapping("items/{itemId}/edit") // pathVariable
-    public String updateItem(@PathVariable Long itemId , @ModelAttribute("form") BookForm form){
-        itemService.updateItem(itemId, form.getName(), form.getPrice(), form.getStockQuantity()) ;
+    public String updateItem(@ModelAttribute("form") BookForm form){
+        itemService.updateItem(form.getId(), form.getName(), form.getPrice(), form.getStockQuantity()) ;
         return "redirect:/items" ;
     } // updateItemForm
 }

@@ -17,11 +17,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="member : ${members}"> <!-- members : 모델로 넘어온 List<member> -->
-                <!-- each 반복문으로 돌림 -->
+            <tr th:each="member : ${members}">
                 <td th:text="${member.id}"></td>
                 <td th:text="${member.name}"></td>
-                <td th:text="${member.address?.city}"></td> <!-- ?. : null 이면 진행 x -->
+                <td th:text="${member.address?.city}"></td>
                 <td th:text="${member.address?.street}"></td>
                 <td th:text="${member.address?.zipcode}"></td>
             </tr>
