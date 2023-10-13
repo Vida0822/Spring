@@ -14,7 +14,7 @@ public class HomeController {
 
     @RequestMapping("/")
     public String home(){
-      log.info("home controller"); // 이 로그 찍힌거 확인하니 화면에서 문제 발생한거 알 수 있음
+      log.info("home controller");
       return "home" ; // home.html
     }
 }

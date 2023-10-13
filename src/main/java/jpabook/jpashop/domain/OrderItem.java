@@ -20,10 +20,10 @@ public class OrderItem {
 
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "item_id")
-    private Item item ; // many가 OrderItems , one이 Item
+    private Item item ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id") // 조인할 컬럼 !
+    @JoinColumn(name = "order_id")
     private Order order ;
 
     private int orderPrice ; // 주문 '당시의' 가격
@@ -33,7 +33,6 @@ public class OrderItem {
     protected OrderItem(){
     }
     */
-
 
     // ** 생성 메서드 **//
     // 실제 이걸 호출하는건 서비스 계층이 되겠지?
@@ -49,11 +48,10 @@ public class OrderItem {
 
     // ** 비즈니스 로직 **//
     /*
-    주문 취소시 주문 아이템 테이블에서도 다시 주문된 아이템 목록 삭제
+    주문 취소
      */
     public void cancel() {
-        getItem().addStock(count); //  getItem() - 객체 생략 = 이 객체의 Item
-        // Item 클래스의 addStock 메서드 호출 ! 편리 --> 바로 Item 클래스 안에 있음
+        getItem().addStock(count);
     }
 
     // ** 조회 로직 ** //

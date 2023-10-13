@@ -22,23 +22,18 @@ import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-// 통합 테스트 (원래는 db나 스프링 없이 그 메서드만 동작하는지 보기위해 단위테스트 실행하는게 좋음)
-// 특히 entity안에 있는 비즈니스 메서드들 테스트 하는게 중요
-// entity 모델의 장점 : repository 없이 db없이 비즈니스 로직만 점검하는 단위테스트에선 Entity test만 해도 좋음 !
 @Transactional
 public class OrderServiceTest {
 
-    @Autowired  EntityManager en ; // save를 통해 호출하는 것이 아닌 그냥 persist 해주기 위함
+    @Autowired  EntityManager en ;
     @Autowired  OrderService orderService ;
     @Autowired  OrderRepository orderRepository ;
 
     @Test
     public void 상품주문() throws Exception{
         //given
-        // 회원가입 (회원 ok )
-        Member member = createMember(); // extract method
-
-        // 상품 만들기 (상품 ok)
+        // 엔티티 조회
+        Member member = createMember(); // extract method (회원 가입)
         Book book = createBook();
 
         // when (회원이 상품을 주문할 때)
@@ -61,7 +56,6 @@ public class OrderServiceTest {
         //given
         Member member = createMember();
         Item item = createBook(); // "jpa" , 10000, 10
-
         int orderCount = 11; // 재고보다 주문 수량이 많은 상황
 
         // when
@@ -77,9 +71,7 @@ public class OrderServiceTest {
         //given
         Member member = createMember() ;
         Book item = createBook();
-
         int orderCount = 2 ;
-
         Long orderId = orderService.order(member.getId(), item.getId(), orderCount) ;
 
         // when

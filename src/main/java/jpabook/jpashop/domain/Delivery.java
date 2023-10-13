@@ -19,7 +19,6 @@ public class Delivery {
     @Embedded
     private Address address ;
 
-   // @Enumerated(EnumType.ORDINAL)  순서대로 1, 2, 3 --> 중간에 다른 값 생기면 망함 ㅋㅋ... (READY ,xxx ,CAMP) => 절대 쓰면 안되고 꼭 String 으로 써야함
    @Enumerated(EnumType.STRING)
    private DeleveryStatus status ; // READY , CAMP
 }

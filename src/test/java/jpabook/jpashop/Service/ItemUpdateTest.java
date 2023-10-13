@@ -19,7 +19,6 @@ public class ItemUpdateTest {
     @Test
     public void updateTest() throws Exception{
 
-
         Book book = en.find(Book.class , 1L) ;
 
         // TX

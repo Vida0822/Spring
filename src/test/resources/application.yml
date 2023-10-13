@@ -14,7 +14,6 @@ spring:
 #      hibernate:
 #        show_sql: true
 #        format_sql: true
-  # 이런 설정들 어디서 배우나요 ? Spring Boot Documentation (Reference Guide)에서 하나하나 공부해야지 ㅎ
 
 logging:
   level:
