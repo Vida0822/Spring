@@ -1,0 +1,22 @@
+server:
+  port: 8081
+
+jwt:
+  secret:
+    key: "1bHO0iXdu2GfRE1Lj0GMSTrcv5U2Xqy0+VDViviWOh4QS9t1q69NOWD20nZO5/o6UyKUKS7w8pkpygfN9XF1vg=="
+
+
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/security;
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
