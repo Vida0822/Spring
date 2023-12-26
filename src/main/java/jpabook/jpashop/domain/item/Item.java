@@ -25,6 +25,7 @@ public abstract class Item {
 
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>() ;
+    // 얜 @JsonIgnore 없어도 됨 : category는 강제 초기화 안하니까 Proxy로 나옴  json - "categories": null,
 
     // == 핵짐 비즈니스 로직 == //
     /*

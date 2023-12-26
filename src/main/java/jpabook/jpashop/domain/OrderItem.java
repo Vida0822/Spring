@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jpabook.jpashop.domain.item.Item;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,10 +21,12 @@ public class OrderItem {
 
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "item_id")
+    // @JsonIgnore 필요 x : Item에선 다시 Order를 참조하는게 없으므로 양방향이 아님
     private Item item ;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
+    @JsonIgnore // 양방향 관계에선 이거 걸어줘야함 !
     private Order order ;
 
     private int orderPrice ; // 주문 '당시의' 가격

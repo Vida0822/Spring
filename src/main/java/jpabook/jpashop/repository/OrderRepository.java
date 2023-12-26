@@ -137,6 +137,17 @@ public class OrderRepository {
     }
 
 
+    public List<Order> findAllWithItem() {
+        return en.createQuery(
+                "select distinct o from Order o "+
+                       // " join fetch o.member o " + - QueryException: could not resolve property: delivery of: jpabook.jpashop.domain.Member
+                        " join fetch o.member m " +
+                        " join fetch o.delivery d " +
+                        " join fetch o.orderItems oi "+
+                        " join fetch oi.item i ", Order.class)
+               // .setFirstResult(1)
+               // .setMaxResults(100)
+                .getResultList() ;
 
-
+    }
 } // class

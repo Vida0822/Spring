@@ -22,7 +22,8 @@ public class JpashopApplication {
     @Bean
     Hibernate5Module hibernate5Module(){
         Hibernate5Module hibernate5Module = new Hibernate5Module();
-        hibernate5Module.configure(Hibernate5Module.Feature.FORCE_LAZY_LOADING , true) ;
+        // lazy loading 으로 데이터가 로딩된 애들만(proxy가 초기화 된 애들만) api에 반환됨 (proxy면 데이터 안 뿌림)
+        // hibernate5Module.configure(Hibernate5Module.Feature.FORCE_LAZY_LOADING , true) ;
         return hibernate5Module ;
     };
 

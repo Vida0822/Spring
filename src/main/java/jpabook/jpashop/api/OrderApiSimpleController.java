@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.*;
 
 @RestController
 @RequiredArgsConstructor
-public class OrderSimpleApiController {
+public class OrderApiSimpleController {
 
     /*
     주문 정보 조회
@@ -37,7 +37,6 @@ public class OrderSimpleApiController {
     @GetMapping("/api/v1/simple-orders")
     public List<Order> ordersV1(){
         List<Order> all = orderRepository.findAllByString(new OrderSearch());
-        return all ;
         // Order에 Member와 Delivery 다 있음
 
     /*
@@ -60,12 +59,14 @@ public class OrderSimpleApiController {
     문제 : Api 스펙과 관계없는 다른 객체들(거의 전부)를 다 끌고옴 ex) OrderItem
     해결 : Hibernate5Module 옵션 사용하지 말고 Lazy 로딩 내가 직접
         ※ 그렇다고 EAGER 로 바꾸면 ㄴㄴ
+    */
 
         for (Order order: all  ) {
             order.getMember().getName() ; // Lazy 강제 초기화
             order.getDelivery().getAddress() ; // Lazy 강제 초기화
         }
         return all ;
+        /*
     문제 : getName()만 요청하긴 하지만 사실상 Member엔티티의 다른 정보들까지 다 들고 옴
      ==> 결론 : Entity를 외부로 노출하지 말자 ! 필요한 api 스펙만 dto로 변경해서 노출 ***
     */
