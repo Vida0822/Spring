@@ -1,9 +1,7 @@
 package jpabook.jpashop.repository;
 
 import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderSearch;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -128,4 +126,17 @@ public class OrderRepository {
 
 
     } // findAll
+
+    public List<Order> findWithMemberDelivery() {
+        return en.createQuery(
+                "select o from Order o "+
+                        "join fetch o.member m "+
+                        "join fetch o.delivery d ", Order.class
+                // 한번에 조인해서 select 절로 다 가져오는거임
+        ).getResultList() ;
+    }
+
+
+
+
 } // class

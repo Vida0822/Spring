@@ -1,5 +1,6 @@
-package jpabook.jpashop.domain;
+package jpabook.jpashop.repository;
 
+import jpabook.jpashop.domain.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +12,7 @@ public class OrderSearch {
     // (not 쿼리를 다 다르게 쓰는게 아니라 쿼리 자체가 달라지는 거임)
 
     private String memberName ; // 회원 이름 
-    private OrderStatus orderStatus ; //주문 상태 
+    private OrderStatus orderStatus ; //주문 상태
 
    
 }

@@ -48,4 +48,9 @@ public class MemberService {
         return memberRepository.findOne(memberId) ;
     }
 
+    @Transactional
+    public void update(Long id, String name) {
+        Member member = memberRepository.findOne(id) ;  // 영속성 컨텍스트에서 id로 찾고 없으면 db에서 끌어옴 (input , Read)
+        member.setName(name) ; // 영속 상태 entity --> 트랜잭션 커밋 시점에 변경된 내용을 flush
+    }
 } // MemberService

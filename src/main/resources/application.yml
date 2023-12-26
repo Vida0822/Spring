@@ -3,13 +3,14 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/jpashop
+    url: jdbc:h2:tcp://localhost/~/jpashop2
     username: sa
     password:
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
       ddl-auto: create # Create the schema and destroy previous data.
+      # none # 테이블 드랍하지 x
     properties:
       hibernate:
         show_sql: true
