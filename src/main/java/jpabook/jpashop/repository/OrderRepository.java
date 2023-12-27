@@ -150,4 +150,14 @@ public class OrderRepository {
                 .getResultList() ;
 
     }
+
+    public List<Order> findWithMemberDelivery(int offset, int limit) {
+        return en.createQuery(
+                "select o from Order o "+
+                       // "join fetch o.member m "+ --> 이렇게 해도 결과 정상적 + IN 쿼리 지연로딩으로 성능도 그닥 나쁘지 x
+                        "join fetch o.delivery d ", Order.class) //--> but XToOne할땐 왠만하면 다 fetchjoin
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList() ;
+    }
 } // class

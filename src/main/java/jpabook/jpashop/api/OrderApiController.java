@@ -6,14 +6,21 @@ import jpabook.jpashop.domain.OrderItem;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
+import jpabook.jpashop.repository.order.query.OrderFlatDto;
+import jpabook.jpashop.repository.order.query.OrderItemQueryDto;
+import jpabook.jpashop.repository.order.query.OrderQueryDto;
+import jpabook.jpashop.repository.order.query.OrderQueryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -83,7 +90,7 @@ public class OrderApiController {
         List<Order> orders = orderRepository.findAllByString(new OrderSearch()) ;
         return orders.stream()
                 .map(o -> new OrderDto(o))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
     @Data
     // @Getter
@@ -130,7 +137,7 @@ public class OrderApiController {
             //   : 위 데이터들처럼 표시할 데이터만 반환 <-> OrderItem 마저 Dto로 반환
             orderItems = order.getOrderItems().stream()
                     .map(orderItem -> new OrderItemDto(orderItem)) // DTO' 생성자 Parameter론 Entity 넣어주는게 편함
-                    .collect(Collectors.toList());
+                    .collect(toList());
         }
     } // OrderDto
 
@@ -167,7 +174,7 @@ public class OrderApiController {
 
         return orders.stream()
                 .map(o -> new OrderDto(o))
-                .collect(Collectors.toList());
+                .collect(toList());
         /*
          ORDER & ORDERITEM 조인 시 Order 데이터가 중복해서 나타남 (OrderItem 행 갯수 기준으로 rows 출력되므로)
          => 근데, dto에서 출력할 땐 OrderItem 하나만 출력하는게 아니라 Order의 OrderItem들을 같이 출력함
@@ -189,5 +196,77 @@ public class OrderApiController {
         2. 컬렉션 둘 이상에 패치 조인을 사용하면 안된다
         (뭘 기준으로 데이터를 끌고올지 모를 수 있고 정합성이 떨어짐)
          */
-    }
-}
+    } // ordersV3
+
+    /*
+    3.1. 페이징 한계 개선
+     */
+    @GetMapping("/api/v3.1/orders")
+    public List<OrderDto> ordersV3_page(
+            @RequestParam(value = "offset", defaultValue = "0") int offset
+            ,@RequestParam(value = "limit", defaultValue = "100") int limit )
+    {
+        List<Order> orders = orderRepository.findWithMemberDelivery(offset, limit) ;
+        // member 랑 delvery 한방 쿼리로 가져옴 --> XToOne 관계에선 fetch join 많이해도 페이징 가능
+        // 페이징할 기준인 Order 선에서 걸러져서 들어오고 --> 여기서 Order가 중복되지 않게 rows 2개만 넘어오고
+
+        return orders.stream()
+                .map(o -> new OrderDto(o)) // 강제 지연로딩
+                .collect(toList());
+        // 그 걸러진 Order 각각에 대해 컬렉션 지연로딩 (페이징된 애들 요소 각각에 컬렉션 붙여주는거니 페이징 깨지지 않음)
+        // --> 결과 2개를 Stream 돌리면서 각각 OrderItems 컬렉션 붙여주기 (물론 얘는 조회된 행수만큼 조회 쿼리가 나가지만 이건 아래에서 개선)
+        /*
+        문제발생 : OrderItems에서 n+1 문제 발생 (Member, Delivery는 ㄱㅊ)
+        => application.yml : hibernate.default_batch_fetch_size: 100 (global)
+            or @BatchSize - XToMany : 그 컬렉션을 필드로 갖는 클래스에서 그 위에 ex) List<OrderItem> , XToOne : 해당 클래스 자체에 ex) Item
+            <-> In 쿼리의 파라미터로 100개까지 받겠다
+            --> 'IN' 쿼리로 조회되는 OrderItem 별로(2번), 그 Item별로(2번) 각각 조회했던것과 달리 3번만 쿼리 나감 
+            <-> 1:n:m 을 1:1:1로 변환!
+
+        * batchsize 사이즈 설정이 중요 !
+            ㄴ db 중 IN 쿼리에서 1000개를 넘어가면 오류나는 경우 多 (maximum 1000)
+        ==> 순간 부하(CPU, 리소스 사용) vs 시간   고려해서 100 ~ 1000 개 사이
+            ㄴ but 메모리는 어떻게 불러오든 다 불러오기때문에 사용량이 같음 (outofmemory 위험은 같음)
+        */
+    } // ordersV3_page
+
+    /*
+    4. Jpa로 컬렉션을 DTO로 바로 조회 (엔티티 x)
+     */
+    private final OrderQueryRepository orderQueryRepository ;
+
+    @GetMapping("/api/v4/orders")
+    public List<OrderQueryDto> ordersV4(){
+        return orderQueryRepository.findOrderQueryDto() ; // repository에서 바로 dto를 반환
+    }  // ordersV4
+
+    @GetMapping("/api/v5/orders")
+    public List<OrderQueryDto> ordersV5(){
+        return orderQueryRepository.findOrderQueryDto_opt() ; // repository에서 바로 dto를 반환
+    }  // ordersV4
+
+    @GetMapping("/api/v6/orders")
+    public List<OrderQueryDto> ordersV6(){
+        List<OrderFlatDto> flats = orderQueryRepository.findOrderQueryDto_flat();
+        // OrderFlatDto를 OrderQueryDto 스펙에 어떻게 맞추는가 --> 직접 중복을 거른다 !
+
+        return flats.stream()
+                .collect(
+                        groupingBy(o -> new OrderQueryDto(o.getOrderID(), o.getName(), o.getOrderDate(), o.getOrderStatus(), o.getAddress())
+                                // 1. 그룹 기준 : 각 주문 정보들을 OrderQueryDto로 매핑 -> 그루핑 기준(Key)는 OrderQueryDto지만 실질적으로 OrderId 기준
+                                , mapping(o-> new OrderItemQueryDto(o.getOrderID(), o.getItemName(), o.getOrderPrice(), o.getCount()) , toList())
+                                // 2. 각 그룹에 매핑 : OrderQueryDto에서 각 주문별 아이템 정보들을 뽑아 OrderItemQueryDto로 변환 --> List<OrderItemQueryDto>생성
+                        ) // groupingBy
+                ).entrySet().stream() // <OrderQueryDto order, List<OrderItemQueryDto> > --> 이 엔트리 자체가 스트림의 요소 
+                .map(e -> new OrderQueryDto(e.getKey().getOrderID(),e.getKey().getName()
+                        , e.getKey().getOrderDate(), e.getKey().getOrderStatus()
+                        , e.getKey().getAddress(), e.getValue())) // <key와, value>를 하나의 OrderQueryDto로 합쳐줌 (요소 변환)
+                .collect(toList()); // 리스트로 변환해 반환 
+
+        /*
+        단점 : 쿼리는 한번이지만 중복데이터 추가 --> 애플리케이션에서 추가 작업이 크다 (분해해 웹 계층 dto로 만드는 과정)
+         */
+
+
+    }  // ordersV6
+} // OrderApiController
