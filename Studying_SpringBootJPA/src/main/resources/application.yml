@@ -1,0 +1,28 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/jpashop2
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create # Create the schema and destroy previous data.
+      # none # 테이블 드랍하지 x
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 100
+  # 이런 설정들 어디서 배우나요 ? Spring Boot Documentation (Reference Guide)에서 하나하나 공부해야지 ㅎ
+
+logging:
+  level:
+    org.hibernate.sql : debug
+    org.hibernate.type: trace #띄어쓰기 2칸
+
+
+
+

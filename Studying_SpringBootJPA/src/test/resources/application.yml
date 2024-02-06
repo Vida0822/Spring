@@ -1,0 +1,25 @@
+server:
+  port: 8081
+
+spring:
+#  datasource:
+#    url: jdbc:h2:mem:test
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: create-drop # Create + application 종료시 데이터 db 싹 비움
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        format_sql: true
+
+logging:
+  level:
+    org.hibernate.sql : debug
+    org.hibernate.type: trace #띄어쓰기 2칸
+
+
+
+
