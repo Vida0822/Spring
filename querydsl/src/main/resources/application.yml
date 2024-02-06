@@ -1,0 +1,24 @@
+spring:
+  profiles:
+    active: local # local에서'만' 돌린다 (개발서버 dev, real : 운영)
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/querydsl
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+  properties:
+    hibernate:
+     # show_sql: true -- system out으로 출력 : 왠만하면 log로 보는게 낫기 때문에 주석처리
+      format_sql: true
+      use_sql_comments : true  # jpql을 쿼리로 좀더 편하게 확인하기 위함
+
+logging.level:
+  org.hibernate.SQL: debug
+ # org.hibernate.type : trace -- binding parameter는 1이야 ~ (이것도 불편하니 묶어서 볼수있는 외부 라이브러리 추가)
+
+server:
+  port: 8081
+# org.hibernate.type: trace
