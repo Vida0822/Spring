@@ -1,23 +1,25 @@
-## 스프링 부트 동작원리
+# 정리
+
+### 스프링 부트 동작원리
 * 강의 : Toby의 스프링 부트
 
 
-## JPA란? 
+### JPA란? 
 * 강의 : 
 <br> 
   
-## 실전 웹개발 
+### 실전 웹개발 
 * 강의 : 
 <br>
   
-## 성능 개선 
+### 성능 개선 
 * 강의 : 
 <br>
 
-## QueryDSL 
+### QueryDSL 
 * 강의 : 
 <br> 
 
-## Spring Security 
+### Spring Security 
 * 강의 
 <br>
